@@ -4,13 +4,13 @@ import {
   KeyboardAvoidingView,
   Modal,
   Platform,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   RetailcodeApiClient,
   RetailcodeApiError,
@@ -29,7 +29,8 @@ import { Footer } from './components/Footer.js';
 export interface TopupWidgetProps {
   publicKey: string;
   msisdn: string;
-  baseUrl: string;
+  /** Defaults to https://corporatedevapi.retailcode.com.ng — only set this for testing */
+  baseUrl?: string;
   theme?: { accent?: string };
   /**
    * When true, the widget renders inside a full-screen Modal so it overlays
@@ -89,8 +90,8 @@ function TopupWidgetInner({
 }: Omit<TopupWidgetProps, 'modal'>) {
   const accent = resolveAccent(theme?.accent);
   const client = useMemo(
-    () => new RetailcodeApiClient(baseUrl, publicKey),
-    [baseUrl, publicKey],
+    () => new RetailcodeApiClient(publicKey, baseUrl),
+    [publicKey, baseUrl],
   );
 
   const state = useTopupConfig(client, msisdn);

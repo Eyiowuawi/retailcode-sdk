@@ -35,7 +35,7 @@ class TopupWidget extends StatefulWidget {
     super.key,
     required this.publicKey,
     required this.msisdn,
-    required this.baseUrl,
+    this.baseUrl = 'https://corporatedevapi.retailcode.com.ng',
     this.accent = '#0057FF',
     this.onSuccess,
     this.onClose,

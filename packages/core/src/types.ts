@@ -11,7 +11,7 @@ export interface TopupCallbacks {
 export interface TopupConfig extends TopupCallbacks {
   publicKey: string;
   msisdn: string;
-  baseUrl: string;
+  baseUrl?: string; // defaults to https://corporatedevapi.retailcode.com.ng
   theme?: Theme;
 }
 

@@ -30,7 +30,7 @@ import WebKit
 public struct TopupView: UIViewRepresentable {
     public let publicKey: String
     public let msisdn: String
-    public let baseUrl: String
+    public var baseUrl: String
     public var accent: String = "#0057FF"
     public var onSuccess: (() -> Void)? = nil
     public var onClose: (() -> Void)? = nil
@@ -38,7 +38,7 @@ public struct TopupView: UIViewRepresentable {
     public init(
         publicKey: String,
         msisdn: String,
-        baseUrl: String,
+        baseUrl: String = "https://corporatedevapi.retailcode.com.ng",
         accent: String = "#0057FF",
         onSuccess: (() -> Void)? = nil,
         onClose: (() -> Void)? = nil
