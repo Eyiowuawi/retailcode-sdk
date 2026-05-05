@@ -1,12 +1,14 @@
 # Retailcode SDK
 
-Auto Topup subscription widget for web and React Native.
+Auto Topup subscription widget for web, React Native, Flutter, and iOS.
 
-| Package | Description |
-|---|---|
-| `@tolucode/core` | Shared API client, types, validation — no platform code |
-| `@tolucode/web` | Browser widget via Shadow DOM. Ships a CDN-ready IIFE bundle |
-| `@tolucode/react-native` | Native React Native component |
+| Package | Platform | Install |
+|---|---|---|
+| `@tolucode/core` | Shared | npm |
+| `@tolucode/web` | Browser / any WebView | npm + CDN |
+| `@tolucode/react-native` | React Native | npm |
+| `tolucode_topup` | Flutter | git |
+| `TolucodeTopup` | iOS (Swift) | Swift Package Manager |
 
 ---
 
@@ -97,23 +99,39 @@ RetailcodeTopup.create({
 }).mount();
 ```
 
-**Next.js** — call `.mount()` inside `useEffect` so it runs client-side only:
+**Next.js** — use `useState` + `useEffect` so the container div is in the DOM before `.mount()` runs, and the widget overlays the current page:
 
 ```tsx
-import { useEffect } from 'react';
+'use client';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { RetailcodeTopup } from '@tolucode/web';
 
-export default function TopupPage() {
+export default function SomePage() {
+  const router = useRouter();
+  const [widgetOpen, setWidgetOpen] = useState(false);
+
   useEffect(() => {
+    if (!widgetOpen) return;
     RetailcodeTopup.create({
       publicKey: 'pk_live_xxxx',
       msisdn:    '08012345678',
       container: '#topup-widget',
-      onClose:   () => router.push('/'),
+      onClose:   () => setWidgetOpen(false),
+      onSuccess: () => setWidgetOpen(false),
     }).mount();
-  }, []);
+  }, [widgetOpen]);            // runs after the div is rendered
 
-  return <div id="topup-widget" />;
+  return (
+    <>
+      <button onClick={() => setWidgetOpen(true)}>Open Topup</button>
+
+      {/* Rendered into DOM first, then widget mounts into it */}
+      {widgetOpen && (
+        <div id="topup-widget" style={{ position: 'fixed', inset: 0, zIndex: 9999 }} />
+      )}
+    </>
+  );
 }
 ```
 
@@ -225,6 +243,121 @@ export function TopupWebViewScreen({ navigation }: NativeStackScreenProps<any>) 
 ```
 
 The web SDK detects `window.ReactNativeWebView` automatically and posts `{ action: 'close' }` when the user closes the widget — no extra configuration needed.
+
+---
+
+## Integration E — Flutter
+
+**Install** — add to your app's `pubspec.yaml`:
+
+```yaml
+dependencies:
+  tolucode_topup:
+    git:
+      url: https://github.com/Eyiowuawi/retailcode-sdk.git
+      path: packages/flutter
+```
+
+Then run:
+
+```bash
+flutter pub get
+```
+
+**Option 1 — Bottom sheet (recommended):**
+
+```dart
+import 'package:tolucode_topup/tolucode_topup.dart';
+
+ElevatedButton(
+  onPressed: () => showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    useSafeArea: true,
+    builder: (_) => TopupWidget(
+      publicKey: 'pk_live_xxxx',
+      msisdn:    '08012345678',
+      baseUrl:   'https://corporatedevapi.retailcode.com.ng',
+      accent:    '#0057FF',
+      onSuccess: () => Navigator.pop(context),
+      onClose:   () => Navigator.pop(context),
+    ),
+  ),
+  child: const Text('Top Up'),
+)
+```
+
+**Option 2 — Full screen / Navigator push:**
+
+```dart
+Navigator.push(context, MaterialPageRoute(
+  builder: (_) => Scaffold(
+    body: TopupWidget(
+      publicKey: 'pk_live_xxxx',
+      msisdn:    '08012345678',
+      baseUrl:   'https://corporatedevapi.retailcode.com.ng',
+      onSuccess: () => Navigator.pop(context),
+      onClose:   () => Navigator.pop(context),
+    ),
+  ),
+));
+```
+
+The widget loads the web SDK inside a `WebView` and listens for close/success events via a `JavascriptChannel` — no extra setup needed.
+
+---
+
+## Integration F — iOS (SwiftUI)
+
+**Install via Swift Package Manager:**
+
+In Xcode → **File → Add Package Dependencies** → paste this URL:
+
+```
+https://github.com/Eyiowuawi/retailcode-sdk
+```
+
+Select the **TolucodeTopup** product and add it to your target.
+
+**Option 1 — Sheet:**
+
+```swift
+import TolucodeTopup
+
+struct ContentView: View {
+    @State private var showTopup = false
+
+    var body: some View {
+        Button("Top Up") { showTopup = true }
+            .sheet(isPresented: $showTopup) {
+                TopupView(
+                    publicKey: "pk_live_xxxx",
+                    msisdn:    "08012345678",
+                    baseUrl:   "https://corporatedevapi.retailcode.com.ng",
+                    accent:    "#0057FF",
+                    onSuccess: { showTopup = false },
+                    onClose:   { showTopup = false }
+                )
+            }
+    }
+}
+```
+
+**Option 2 — NavigationLink / full screen:**
+
+```swift
+NavigationLink("Top Up") {
+    TopupView(
+        publicKey: "pk_live_xxxx",
+        msisdn:    "08012345678",
+        baseUrl:   "https://corporatedevapi.retailcode.com.ng",
+        onClose:   { /* navigation back is automatic */ }
+    )
+    .ignoresSafeArea()
+}
+```
+
+The widget uses `WKWebView` with a `WKScriptMessageHandler` named `retailcode` — the same handler the web SDK already targets for iOS.
 
 ---
 
