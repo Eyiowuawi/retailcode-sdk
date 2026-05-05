@@ -1,10 +1,14 @@
 {
   "name": "@tolucode/core",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Retailcode SDK core — shared API client, types, and utilities",
   "license": "MIT",
   "homepage": "https://github.com/Eyiowuawi/retailcode-sdk",
-  "repository": { "type": "git", "url": "https://github.com/Eyiowuawi/retailcode-sdk.git", "directory": "packages/core" },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Eyiowuawi/retailcode-sdk.git",
+    "directory": "packages/core"
+  },
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -15,8 +19,12 @@
       "require": "./dist/index.js"
     }
   },
-  "files": ["dist"],
-  "publishConfig": { "access": "public" },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",

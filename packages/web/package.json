@@ -1,11 +1,17 @@
 {
   "name": "@tolucode/web",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Retailcode SDK — browser widget (Shadow DOM)",
   "license": "MIT",
   "homepage": "https://github.com/Eyiowuawi/retailcode-sdk",
-  "repository": { "type": "git", "url": "https://github.com/Eyiowuawi/retailcode-sdk.git", "directory": "packages/web" },
-  "publishConfig": { "access": "public" },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Eyiowuawi/retailcode-sdk.git",
+    "directory": "packages/web"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -17,7 +23,9 @@
     },
     "./iife": "./dist/retailcode.iife.global.js"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
