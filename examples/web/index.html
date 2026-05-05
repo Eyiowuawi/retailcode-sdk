@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Retailcode SDK — Web Test</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, sans-serif; background: #F3F4F6; min-height: 100vh; }
+
+    .controls {
+      position: fixed; top: 16px; left: 50%; transform: translateX(-50%);
+      z-index: 9999; background: #fff; border-radius: 10px; padding: 16px 20px;
+      box-shadow: 0 4px 24px rgba(0,0,0,.12);
+      display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
+    }
+    .controls label { font-size: 12px; color: #6B7280; }
+    .controls input, .controls select {
+      border: 1.5px solid #E5E7EB; border-radius: 6px; padding: 6px 10px;
+      font-size: 13px; color: #111827; width: 160px;
+    }
+    .controls button {
+      padding: 8px 18px; border: none; border-radius: 6px;
+      background: #0057FF; color: #fff; font-size: 13px; font-weight: 600;
+      cursor: pointer;
+    }
+    .controls button:hover { background: #0046CC; }
+    .controls button.secondary { background: #F3F4F6; color: #374151; }
+    .controls button.secondary:hover { background: #E5E7EB; }
+
+    #log {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: #1F2937; color: #D1FAE5; font-family: monospace; font-size: 12px;
+      padding: 10px 16px; max-height: 120px; overflow-y: auto;
+    }
+    #log p { margin: 2px 0; }
+    #log .err { color: #FCA5A5; }
+
+    /* The widget mounts here — takes full viewport below controls */
+    #widget { position: fixed; inset: 0; }
+  </style>
+</head>
+<body>
+
+<div class="controls">
+  <div>
+    <label>Phone number</label><br>
+    <input id="msisdn" value="08012345678" placeholder="08012345678">
+  </div>
+  <div>
+    <label>Accent colour</label><br>
+    <input id="accent" type="color" value="#0057FF" style="width:52px;height:34px;padding:2px;cursor:pointer;">
+  </div>
+  <div>
+    <label>Subscriber state</label><br>
+    <select id="state">
+      <option value="new">Brand new</option>
+      <option value="airtime">Airtime only subscribed</option>
+      <option value="data">Data only subscribed</option>
+      <option value="full">Fully subscribed</option>
+    </select>
+  </div>
+  <button onclick="mount()">Mount widget</button>
+  <button class="secondary" onclick="unmount()">Clear</button>
+</div>
+
+<div id="widget"></div>
+
+<div id="log"><p style="color:#9CA3AF">— events will appear here —</p></div>
+
+<!-- Load the built IIFE bundle -->
+<script src="/retailcode.iife.global.js"></script>
+<script>
+  function log(msg, err) {
+    const el = document.getElementById('log');
+    const p = document.createElement('p');
+    p.className = err ? 'err' : '';
+    p.textContent = new Date().toLocaleTimeString() + '  ' + msg;
+    el.appendChild(p);
+    el.scrollTop = el.scrollHeight;
+  }
+
+  function mount() {
+    document.getElementById('widget').innerHTML = '';
+
+    const msisdn = document.getElementById('msisdn').value.trim();
+    const accent = document.getElementById('accent').value;
+
+    // Patch the mock config to reflect the selected subscriber state
+    patchMockState(document.getElementById('state').value);
+
+    log('mounting widget for ' + msisdn + ' accent=' + accent);
+
+    RetailcodeSDK.RetailcodeTopup.create({
+      publicKey: 'pk_test_mock_key',
+      msisdn,
+      container: '#widget',
+      theme: { accent },
+      onSuccess: (r) => log('✓ onSuccess ' + JSON.stringify(r)),
+      onClose:   (r) => {
+        log('✓ onClose ' + JSON.stringify(r));
+        // In a real app you'd navigate back here.
+        // For this demo just clear the widget.
+        document.getElementById('widget').innerHTML =
+          '<p style="text-align:center;margin-top:40vh;color:#6B7280;font-family:system-ui">Widget closed. Click "Mount widget" to reopen.</p>';
+      },
+    }).mount();
+  }
+
+  function unmount() {
+    document.getElementById('widget').innerHTML = '';
+    log('cleared');
+  }
+
+  // ── Patch mock server response via state selector ──────────────────────
+  // We shadow fetch so the test page can simulate different user states
+  // without needing multiple server endpoints.
+  const _realFetch = window.fetch.bind(window);
+  let _mockSubscribedAirtime = false;
+  let _mockSubscribedData    = false;
+
+  function patchMockState(state) {
+    _mockSubscribedAirtime = state === 'airtime' || state === 'full';
+    _mockSubscribedData    = state === 'data'    || state === 'full';
+  }
+
+  window.fetch = async function(url, opts) {
+    const res = await _realFetch(url, opts);
+    if (typeof url === 'string' && url.includes('/config/')) {
+      const json = await res.json();
+      if (json.data) {
+        json.data.subscribedAirtime = _mockSubscribedAirtime;
+        json.data.subscribedData    = _mockSubscribedData;
+      }
+      return new Response(JSON.stringify(json), {
+        status: res.status,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+    return res;
+  };
+</script>
+
+<!-- Serve the IIFE from the web dist folder -->
+<script>
+  // Tell the IIFE that the API lives on the same origin as this page
+  // (the mock server serves both static files and API routes on port 3000)
+</script>
+</body>
+</html>
