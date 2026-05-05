@@ -44,8 +44,12 @@
 
 <div class="controls">
   <div>
+    <label>Public key</label><br>
+    <input id="pubkey" value="" placeholder="pk_live_xxxx" style="width:180px;">
+  </div>
+  <div>
     <label>Phone number</label><br>
-    <input id="msisdn" value="08012345678" placeholder="08012345678">
+    <input id="msisdn" value="08035107065" placeholder="08012345678">
   </div>
   <div>
     <label>Accent colour</label><br>
@@ -92,15 +96,14 @@
     log('mounting widget for ' + msisdn + ' accent=' + accent);
 
     RetailcodeSDK.RetailcodeTopup.create({
-      publicKey: 'pk_test_mock_key',
+      publicKey: document.getElementById('pubkey').value.trim() || 'pk_test_key',
       msisdn,
+      baseUrl: window.location.origin,   // proxied through localhost:3000 → real API
       container: '#widget',
       theme: { accent },
       onSuccess: (r) => log('✓ onSuccess ' + JSON.stringify(r)),
       onClose:   (r) => {
         log('✓ onClose ' + JSON.stringify(r));
-        // In a real app you'd navigate back here.
-        // For this demo just clear the widget.
         document.getElementById('widget').innerHTML =
           '<p style="text-align:center;margin-top:40vh;color:#6B7280;font-family:system-ui">Widget closed. Click "Mount widget" to reopen.</p>';
       },
@@ -112,39 +115,7 @@
     log('cleared');
   }
 
-  // ── Patch mock server response via state selector ──────────────────────
-  // We shadow fetch so the test page can simulate different user states
-  // without needing multiple server endpoints.
-  const _realFetch = window.fetch.bind(window);
-  let _mockSubscribedAirtime = false;
-  let _mockSubscribedData    = false;
-
-  function patchMockState(state) {
-    _mockSubscribedAirtime = state === 'airtime' || state === 'full';
-    _mockSubscribedData    = state === 'data'    || state === 'full';
-  }
-
-  window.fetch = async function(url, opts) {
-    const res = await _realFetch(url, opts);
-    if (typeof url === 'string' && url.includes('/config/')) {
-      const json = await res.json();
-      if (json.data) {
-        json.data.subscribedAirtime = _mockSubscribedAirtime;
-        json.data.subscribedData    = _mockSubscribedData;
-      }
-      return new Response(JSON.stringify(json), {
-        status: res.status,
-        headers: { 'Content-Type': 'application/json' },
-      });
-    }
-    return res;
-  };
-</script>
-
-<!-- Serve the IIFE from the web dist folder -->
-<script>
-  // Tell the IIFE that the API lives on the same origin as this page
-  // (the mock server serves both static files and API routes on port 3000)
+  function patchMockState() {} // no-op — using real API now
 </script>
 </body>
 </html>
