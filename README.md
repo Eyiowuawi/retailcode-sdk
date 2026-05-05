@@ -4,9 +4,9 @@ Auto Topup subscription widget for web and React Native.
 
 | Package | Description |
 |---|---|
-| `@retailcode/core` | Shared API client, types, validation — no platform code |
-| `@retailcode/web` | Browser widget via Shadow DOM. Ships a CDN-ready IIFE bundle |
-| `@retailcode/react-native` | Native React Native component |
+| `@tolucode/core` | Shared API client, types, validation — no platform code |
+| `@tolucode/web` | Browser widget via Shadow DOM. Ships a CDN-ready IIFE bundle |
+| `@tolucode/react-native` | Native React Native component |
 
 ---
 
@@ -14,7 +14,7 @@ Auto Topup subscription widget for web and React Native.
 
 ### 1. Create an npm organisation
 
-Go to [npmjs.com](https://www.npmjs.com), create an account, then create an organisation named **`retailcode`**. This lets you publish under the `@retailcode/` scope.
+Go to [npmjs.com](https://www.npmjs.com) and log in. You already have the **`tolucode`** organisation — packages will publish under the `@tolucode/` scope automatically.
 
 ### 2. Log in from your terminal
 
@@ -35,9 +35,9 @@ pnpm build
 Publish `core` first because the other two depend on it.
 
 ```bash
-pnpm --filter @retailcode/core publish --no-git-checks
-pnpm --filter @retailcode/web publish --no-git-checks
-pnpm --filter @retailcode/react-native publish --no-git-checks
+pnpm --filter @tolucode/core publish --no-git-checks
+pnpm --filter @tolucode/web publish --no-git-checks
+pnpm --filter @tolucode/react-native publish --no-git-checks
 ```
 
 ### Releasing a new version
@@ -58,7 +58,7 @@ No install needed. Once published, jsDelivr serves the IIFE automatically.
 
 ```html
 <!-- pin to a version in production -->
-<script src="https://cdn.jsdelivr.net/npm/@retailcode/web@0.1.0/dist/retailcode.iife.global.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tolucode/web@0.1.0/dist/retailcode.iife.global.js"></script>
 
 <div id="topup-widget"></div>
 
@@ -81,11 +81,11 @@ No install needed. Once published, jsDelivr serves the IIFE automatically.
 ## Integration B — React / Next.js / Vite
 
 ```bash
-npm install @retailcode/web
+npm install @tolucode/web
 ```
 
 ```ts
-import { RetailcodeTopup } from '@retailcode/web';
+import { RetailcodeTopup } from '@tolucode/web';
 
 RetailcodeTopup.create({
   publicKey: 'pk_live_xxxx',
@@ -101,7 +101,7 @@ RetailcodeTopup.create({
 
 ```tsx
 import { useEffect } from 'react';
-import { RetailcodeTopup } from '@retailcode/web';
+import { RetailcodeTopup } from '@tolucode/web';
 
 export default function TopupPage() {
   useEffect(() => {
@@ -122,7 +122,7 @@ export default function TopupPage() {
 ## Integration C — React Native
 
 ```bash
-npm install @retailcode/react-native @retailcode/core
+npm install @tolucode/react-native @tolucode/core
 ```
 
 ### Option 1 — Modal overlay (no navigation library needed)
@@ -132,7 +132,7 @@ The widget slides up over the current screen. Closing it returns the user to whe
 ```tsx
 import { useState } from 'react';
 import { Button, View } from 'react-native';
-import { TopupWidget } from '@retailcode/react-native';
+import { TopupWidget } from '@tolucode/react-native';
 
 export default function HomeScreen() {
   const [open, setOpen] = useState(false);
@@ -170,7 +170,7 @@ export default function HomeScreen() {
 
 ```tsx
 // TopupScreen.tsx
-import { TopupWidget } from '@retailcode/react-native';
+import { TopupWidget } from '@tolucode/react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 export function TopupScreen({ navigation }: NativeStackScreenProps<any>) {
@@ -230,7 +230,7 @@ The web SDK detects `window.ReactNativeWebView` automatically and posts `{ actio
 
 ## Theme options
 
-Both `@retailcode/web` and `@retailcode/react-native` accept a `theme` prop:
+Both `@tolucode/web` and `@tolucode/react-native` accept a `theme` prop:
 
 | Option | Type | Default | Description |
 |---|---|---|---|

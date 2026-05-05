@@ -1,6 +1,6 @@
-import { resolveAccent } from '@retailcode/core';
+import { resolveAccent } from '@tolucode/core';
 import { TopupWidget } from './widget.js';
-import type { TopupCallbacks } from '@retailcode/core';
+import type { TopupCallbacks } from '@tolucode/core';
 
 export type { TopupCallbacks };
 export { TopupWidget };

@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { formatPhone } from '@retailcode/core';
+import { formatPhone } from '@tolucode/core';
 
 interface HeaderProps {
   title: string;

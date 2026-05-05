@@ -17,6 +17,6 @@ export default defineConfig([
     minify: true,
     sourcemap: false,
     outDir: 'dist',
-    noExternal: ['@retailcode/core'],
+    noExternal: ['@tolucode/core'],
   },
 ]);

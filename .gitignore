@@ -4,3 +4,5 @@ dist/
 *.mjs.map
 *.tsbuildinfo
 .DS_Store
+.claude/
+examples/web/retailcode.iife.global.js

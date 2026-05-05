@@ -26,7 +26,7 @@ importers:
 
   packages/react-native:
     dependencies:
-      '@retailcode/core':
+      '@tolucode/core':
         specifier: workspace:*
         version: link:../core
       react:
@@ -48,7 +48,7 @@ importers:
 
   packages/web:
     dependencies:
-      '@retailcode/core':
+      '@tolucode/core':
         specifier: workspace:*
         version: link:../core
     devDependencies:

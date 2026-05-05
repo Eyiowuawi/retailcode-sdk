@@ -7,7 +7,7 @@ import {
   formatPhone,
   isValidMsisdn,
   isValidAmount,
-} from '@retailcode/core';
+} from '@tolucode/core';
 import { loadSwal, swal } from './dialog.js';
 import { closeWebview, updateUrlStatus } from './webview.js';
 import { buildTokens, buildStyles } from './styles.js';

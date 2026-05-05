@@ -1,5 +1,5 @@
 {
-  "name": "@retailcode/core",
+  "name": "@tolucode/core",
   "version": "0.1.0",
   "description": "Retailcode SDK core — shared API client, types, and utilities",
   "license": "MIT",

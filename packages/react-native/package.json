@@ -1,5 +1,5 @@
 {
-  "name": "@retailcode/react-native",
+  "name": "@tolucode/react-native",
   "version": "0.1.0",
   "description": "Retailcode SDK — React Native components",
   "license": "MIT",
@@ -23,7 +23,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@retailcode/core": "workspace:*"
+    "@tolucode/core": "workspace:*"
   },
   "peerDependencies": {
     "react": ">=18",

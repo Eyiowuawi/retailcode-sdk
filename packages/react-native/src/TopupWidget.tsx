@@ -19,7 +19,7 @@ import {
   resolveAccent,
   isValidMsisdn,
   isValidAmount,
-} from '@retailcode/core';
+} from '@tolucode/core';
 import { useTopupConfig } from './hooks/useTopupConfig.js';
 import { Header } from './components/Header.js';
 import { FormField } from './components/FormField.js';
