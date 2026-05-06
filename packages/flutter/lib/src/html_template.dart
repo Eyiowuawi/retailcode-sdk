@@ -5,7 +5,7 @@ String buildWidgetHtml({
   required String msisdn,
   required String baseUrl,
   required String accent,
-  String version = '0.1.0',
+  String version = '0.2.1',
 }) {
   return '''
 <!DOCTYPE html>

@@ -5,7 +5,7 @@ func buildWidgetHTML(
     msisdn: String,
     baseUrl: String,
     accent: String,
-    version: String = "0.1.0"
+    version: String = "0.2.1"
 ) -> String {
     // Escape single quotes so values are safe inside JS string literals
     func js(_ s: String) -> String { "'\(s.replacingOccurrences(of: "'", with: "\\'"))'" }
