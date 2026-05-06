@@ -72,7 +72,7 @@ public struct TopupView: UIViewRepresentable {
             baseUrl:   baseUrl,
             accent:    accent
         )
-        webView.loadHTMLString(html, baseURL: URL(string: baseUrl))
+        webView.loadHTMLString(html, baseURL: nil)
         return webView
     }
 

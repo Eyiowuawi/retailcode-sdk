@@ -1,11 +1,12 @@
 import Foundation
 
+/// Generates a self-contained HTML page with the SDK bundle inlined —
+/// no CDN request, so the widget opens instantly.
 func buildWidgetHTML(
     publicKey: String,
     msisdn: String,
     baseUrl: String,
-    accent: String,
-    version: String = "0.2.1"
+    accent: String
 ) -> String {
     // Escape single quotes so values are safe inside JS string literals
     func js(_ s: String) -> String { "'\(s.replacingOccurrences(of: "'", with: "\\'"))'" }
@@ -32,7 +33,7 @@ func buildWidgetHTML(
     </head>
     <body>
       <div id="widget"></div>
-      <script src="https://cdn.jsdelivr.net/npm/@tolucode/web@\(version)/dist/retailcode.iife.global.js"></script>
+      <script>\(kRetailcodeSdkBundle)</script>
       <script>
         RetailcodeSDK.RetailcodeTopup.create({
           publicKey: \(js(publicKey)),
