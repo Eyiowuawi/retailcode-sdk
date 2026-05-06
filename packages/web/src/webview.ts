@@ -24,7 +24,18 @@ export function closeWebview(
   url.searchParams.set('isClose', 'true');
   window.history.replaceState({}, '', url);
 
-  unmount?.();
+  const isNative = !!(
+    window.ReactNativeWebView ||
+    window.RetailcodeFlutter ||
+    window.webkit?.messageHandlers?.retailcode ||
+    window.Android?.close
+  );
+
+  // In native WebView contexts the host app dismisses the whole view, so
+  // clearing the DOM first causes a black-screen flash. Only unmount for
+  // plain browser usage where there is no native dismiss.
+  if (!isNative) unmount?.();
+
   onClose?.({ closed: true });
 
   // Include success flag so native apps know whether to fire onSuccess

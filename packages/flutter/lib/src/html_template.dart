@@ -1,11 +1,12 @@
-/// Generates a self-contained HTML page that loads the widget from CDN
-/// and wires up the Flutter JavascriptChannel bridge.
+import 'sdk_bundle.dart';
+
+/// Generates a self-contained HTML page with the SDK bundle inlined —
+/// no CDN request, so the widget opens instantly.
 String buildWidgetHtml({
   required String publicKey,
   required String msisdn,
   required String baseUrl,
   required String accent,
-  String version = '0.2.1',
 }) {
   return '''
 <!DOCTYPE html>
@@ -35,7 +36,7 @@ String buildWidgetHtml({
 <body>
   <div id="widget"></div>
 
-  <script src="https://cdn.jsdelivr.net/npm/\@tolucode/web@$version/dist/retailcode.iife.global.js"></script>
+  <script>$kRetailcodeSdkBundle</script>
   <script>
     RetailcodeSDK.RetailcodeTopup.create({
       publicKey: ${_jsStr(publicKey)},

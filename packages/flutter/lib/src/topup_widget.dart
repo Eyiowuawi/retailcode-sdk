@@ -67,7 +67,6 @@ class _TopupWidgetState extends State<TopupWidget> {
           baseUrl:   widget.baseUrl,
           accent:    widget.accent,
         ),
-        baseUrl: widget.baseUrl,
       );
   }
 
