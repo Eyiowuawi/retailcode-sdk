@@ -75,10 +75,14 @@ class _TopupWidgetState extends State<TopupWidget> {
     final action = data['action'] as String?;
 
     if (action == 'close') {
-      // success flag tells us the subscription completed before closing
       final isSuccess = data['success'] == true;
-      if (isSuccess) widget.onSuccess?.call();
-      widget.onClose?.call();
+      // Mutually exclusive: only one callback fires so developers can safely
+      // call Navigator.pop() in either without causing a double-pop crash.
+      if (isSuccess) {
+        widget.onSuccess?.call();
+      } else {
+        widget.onClose?.call();
+      }
     }
   }
 

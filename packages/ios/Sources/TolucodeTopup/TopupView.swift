@@ -100,10 +100,14 @@ public struct TopupView: UIViewRepresentable {
 
             DispatchQueue.main.async {
                 if action == "close" {
-                    // success flag tells us the subscription completed before closing
+                    // Mutually exclusive: only one callback fires so callers can
+                    // safely call dismiss() in either without a double-dismiss crash.
                     let isSuccess = body["success"] as? Bool == true
-                    if isSuccess { self.onSuccess?() }
-                    self.onClose?()
+                    if isSuccess {
+                        self.onSuccess?()
+                    } else {
+                        self.onClose?()
+                    }
                 }
             }
         }
