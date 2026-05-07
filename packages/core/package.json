@@ -1,6 +1,6 @@
 {
   "name": "@tolucode/core",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Retailcode SDK core — shared API client, types, and utilities",
   "license": "MIT",
   "homepage": "https://github.com/Eyiowuawi/retailcode-sdk",

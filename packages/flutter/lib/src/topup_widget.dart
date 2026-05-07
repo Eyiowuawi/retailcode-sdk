@@ -50,7 +50,7 @@ class _TopupWidgetState extends State<TopupWidget> {
 
     _controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..setBackgroundColor(Colors.transparent)
+      ..setBackgroundColor(Colors.white)
       // Allow the WebView content to scroll — required for keyboard handling
       ..enableZoom(false)
       ..addJavaScriptChannel(

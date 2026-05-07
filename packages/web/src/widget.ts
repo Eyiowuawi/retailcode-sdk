@@ -277,8 +277,16 @@ export class TopupWidget {
 
         updateUrlStatus('successful');
         this.opts.onSuccess?.({ success: true });
-        await swal({ icon: 'success', title: 'Subscription Active!', text: 'Your auto top-up is now enabled.', confirmButtonColor: accent });
-        closeWebview(onClose, unmount, true); // true = success close
+        // Use didClose so we notify the native host AFTER SweetAlert2 finishes
+        // its close animation — prevents the black-screen flash that occurs when
+        // Flutter/iOS dismisses the sheet while the backdrop is still fading out.
+        swal({
+          icon: 'success',
+          title: 'Subscription Active!',
+          text: 'Your auto top-up is now enabled.',
+          confirmButtonColor: accent,
+          didClose: () => closeWebview(onClose, unmount, true),
+        });
       } catch (err) {
         updateUrlStatus('failed');
         swal({ icon: 'error', title: 'Oops!', text: (err as Error).message, confirmButtonColor: accent });
